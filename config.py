@@ -184,23 +184,29 @@ screens = [
                 widget.OpenWeather(
                     location="Bucharest",
                     format="~{main_feels_like:.0f}°{units_temperature}, {pressure}hPa, {wind_speed:.0f}km/h, {humidity}%H",
-                    fmt="🏙️ {}",
+                    fmt="🏙️ {} ",
                     app_key="0ec6327bcee56539cbf468aaffd0bb79",
                 ),
+                widget.DF(
+                    partition="/home",
+                    format="{uf}{m} free ",
+                    fmt="💾 {}",
+                    visible_on_warn=False,
+                ),
                 widget.Memory(
-                    fmt="🐏 {}",
+                    fmt="🐏 {} ",
                     measure_mem="G",
                     format="{MemUsed:.0f}{mm}|{MemTotal:.0f}{mm}",
                 ),
                 widget.CPU(
-                    fmt="🧠 {}",
+                    fmt="🧠 {} ",
                     format="{freq_current}GHz|{load_percent:.0f}%",
                     width=105,
                 ),
                 widget.ThermalSensor(
                     fmt="🔥 {}", format="{temp:.0f}{unit}", tag_sensor="Package id 0"
                 ),
-                widget.Volume(fmt="📢 {}"),
+                widget.Volume(fmt="📢 {} "),
                 widget.Clock(format="%Y.%m.%d %a %I:%M", fmt="⏳️ {} "),
                 # widget.KeyboardLayout(
                 #     fmt='🎹 {}', configured_keyboards=["us", "ro"]),
