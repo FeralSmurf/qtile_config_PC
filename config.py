@@ -2,6 +2,8 @@
 # python-psutil
 # alsa-utils
 # rofi
+# nitrogen
+# picom
 
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -9,16 +11,23 @@ from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
 from check_internet_widget import check_connectivity
-from weather_details import OpenWebsite
 
 import subprocess
+
 
 @hook.subscribe.startup_once
 def autostart():
     # Set the wallpaper using nitrogen
-    subprocess.Popen(["nitrogen", "--set-zoom-fill", "/home/feralsmurf/Downloads/Wallpapers/bridge.jpg"])
+    subprocess.Popen(
+        [
+            "nitrogen",
+            "--set-zoom-fill",
+            "/home/feralsmurf/Downloads/Wallpapers/bridge.jpg",
+        ]
+    )
     # Start picom
     subprocess.Popen(["picom"])
+
 
 mod = "mod4"
 terminal = guess_terminal()
@@ -29,8 +38,7 @@ keys = [
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod], "space", lazy.layout.next(),
-        desc="Move window focus to other window"),
+    Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
     Key(
         [mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
     ),
@@ -42,8 +50,7 @@ keys = [
     ),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
-    Key([mod, "control"], "h", lazy.layout.grow_left(),
-        desc="Grow window to the left"),
+    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key(
         [mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
     ),
@@ -73,21 +80,26 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawn("rofi -show run"), desc="rofi"),
-
     ############
     # language #
     ############
     Key([mod], "F1", lazy.spawn("setxkbmap us"), desc="Change to US layout"),
-    Key([mod], "F2", lazy.spawn("setxkbmap ro std"),
-        desc="Change to RO-STD layout"),
-
+    Key([mod], "F2", lazy.spawn("setxkbmap ro std"), desc="Change to RO-STD layout"),
     ##############
     # Media keys #
     ##############
-    Key([], "XF86AudioLowerVolume", lazy.spawn(
-        "amixer sset Master 5%-"), desc="Lower Volume by 5%"),
-    Key([], "XF86AudioRaiseVolume", lazy.spawn(
-        "amixer sset Master 5%+"), desc="Raise Volume by 5%"),
+    Key(
+        [],
+        "XF86AudioLowerVolume",
+        lazy.spawn("amixer sset Master 5%-"),
+        desc="Lower Volume by 5%",
+    ),
+    Key(
+        [],
+        "XF86AudioRaiseVolume",
+        lazy.spawn("amixer sset Master 5%+"),
+        desc="Raise Volume by 5%",
+    ),
 ]
 
 groups = [Group(i) for i in "123456789"]
@@ -97,9 +109,15 @@ groups = [
     Group("2", label="2 www", spawn=["firefox"]),
     Group("3", label="3 term", spawn=["alacritty"]),
     Group("4", label="4 files", spawn=["thunar"]),
-    Group("5", label="5 docs", ),
-    Group("6", label="6 media", spawn=["chromium youtube.com"]),
-    Group("7", label="7 misc", ),
+    Group(
+        "5",
+        label="5 docs",
+    ),
+    Group("6", label="6 media"),
+    Group(
+        "7",
+        label="7 misc",
+    ),
 ]
 
 for i in groups:
@@ -115,15 +133,14 @@ for i in groups:
                 [mod, "shift"],
                 i.name,
                 lazy.window.togroup(i.name, switch_group=True),
-                desc="Switch to & move focused window to group {}".format(
-                    i.name),
+                desc="Switch to & move focused window to group {}".format(i.name),
             ),
         ]
     )
 
 layouts = [
     layout.Columns(
-        border_focus="#a6e3a1",
+        border_focus="#74c7ec",
         border_normal="#1e1e2e",
         border_width=2,
         margin=4,
@@ -135,6 +152,7 @@ widget_defaults = dict(
     font="DejaVu Nerd Font Bold",
     fontsize=14,
     padding=2,
+    foreground="#cdd6f4",
 )
 extension_defaults = widget_defaults.copy()
 
@@ -143,42 +161,52 @@ screens = [
         top=bar.Bar(
             [
                 widget.CurrentLayout(),
-                widget.GroupBox(this_current_screen_border="#a6e3a1", highlight_method="line",
-                                background="#1e1e2e", highlight_color="#1e1e2e"),
+                widget.GroupBox(
+                    this_current_screen_border="#a6e3a1",
+                    highlight_method="line",
+                    background="#1e1e2e",
+                    highlight_color="#1e1e2e",
+                    foreground="#cdd6f4",
+                    active="#cdd6f4",
+                ),
                 widget.Prompt(),
+                widget.Spacer(),  # window name is now centered
                 widget.WindowName(),
                 widget.Chord(
                     chords_colors={
-                        "launch": ("#ff0000", "#ffffff"),
+                        "launch": ("#f38ba8", "#ffffff"),
                     },
                     nae_transform=lambda name: name.upper(),
                 ),
                 widget.Systray(),
-                widget.Clipboard(fmt='Clipped {} '),
-                widget.GenPollText(func=check_connectivity,
-                                   update_interval=10),
+                widget.Clipboard(fmt="Clipped {} "),
+                widget.GenPollText(func=check_connectivity, update_interval=10),
                 widget.OpenWeather(
-                    location='Bucharest', format='~{main_feels_like:.0f}°{units_temperature}, {weather_details}, {pressure}hPa, {wind_speed:.0f}km/h, {humidity}%H', fmt='🏙️ {}', app_key='0ec6327bcee56539cbf468aaffd0bb79'),
-                OpenWebsite(),
-                widget.DF(
-                    visible_on_warn=False,
-                    fmt="💾 {} ",
-                    format="{uf}{m}|{r:.1f}{m}|{r:.0f}%",
-                    partition="/",
+                    location="Bucharest",
+                    format="~{main_feels_like:.0f}°{units_temperature}, {pressure}hPa, {wind_speed:.0f}km/h, {humidity}%H",
+                    fmt="🏙️ {}",
+                    app_key="0ec6327bcee56539cbf468aaffd0bb79",
                 ),
-                widget.Memory(fmt='🐏 {}', measure_mem='G',
-                              format='{MemUsed:.0f}{mm}|{MemTotal:.0f}{mm}'),
+                widget.Memory(
+                    fmt="🐏 {}",
+                    measure_mem="G",
+                    format="{MemUsed:.0f}{mm}|{MemTotal:.0f}{mm}",
+                ),
                 widget.CPU(
-                    fmt='🧠 {}', format='{freq_current}GHz|{load_percent:.0f}%', width=105),
+                    fmt="🧠 {}",
+                    format="{freq_current}GHz|{load_percent:.0f}%",
+                    width=105,
+                ),
                 widget.ThermalSensor(
-                    fmt='🔥 {}', format='{temp:.0f}{unit}', tag_sensor="Package id 0"),
-                widget.Volume(fmt='📢 {}'),
-                widget.Clock(format='%Y.%m.%d %a %I:%M', fmt='⏳️ {} '),
+                    fmt="🔥 {}", format="{temp:.0f}{unit}", tag_sensor="Package id 0"
+                ),
+                widget.Volume(fmt="📢 {}"),
+                widget.Clock(format="%Y.%m.%d %a %I:%M", fmt="⏳️ {} "),
                 # widget.KeyboardLayout(
                 #     fmt='🎹 {}', configured_keyboards=["us", "ro"]),
             ],
             24,
-            background='#1e1e2e',
+            background="#1e1e2e",
         ),
     ),
 ]
@@ -213,7 +241,7 @@ floating_layout = layout.Floating(
         Match(wm_class="ssh-askpass"),  # ssh-askpass
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
-    ]
+    ],
 )
 auto_fullscreen = True
 focus_on_window_activation = "smart"
