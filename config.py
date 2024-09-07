@@ -80,8 +80,9 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawn("rofi -show run"), desc="rofi"),
+    Key([mod], "d", lazy.spawn("rofi -show window"), desc="rofi show running windows"),
     ############
-    # language #
+    # Language #
     ############
     Key([mod], "F1", lazy.spawn("setxkbmap us"), desc="Change to US layout"),
     Key([mod], "F2", lazy.spawn("setxkbmap ro std"), desc="Change to RO-STD layout"),
@@ -183,7 +184,7 @@ screens = [
                 widget.GenPollText(func=check_connectivity, update_interval=10),
                 widget.OpenWeather(
                     location="Bucharest",
-                    format="~{main_feels_like:.0f}°{units_temperature}, {pressure}hPa, {wind_speed:.0f}km/h, {humidity}%H",
+                    format="~{temp:.0f}°, {pressure}hPa, {wind_speed:.0f}km/h, {humidity}%H, {weather}",
                     fmt="🏙️ {} ",
                     app_key="0ec6327bcee56539cbf468aaffd0bb79",
                 ),
