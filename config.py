@@ -29,6 +29,14 @@ def autostart():
     subprocess.Popen(["picom"])
 
 
+# Maximize all apps running in the background
+@lazy.group.function
+def maximize_all(group):
+    for win in group.windows:
+        if win.minimized:
+            win.toggle_minimize()
+
+
 mod = "mod4"
 terminal = guess_terminal()
 
@@ -81,6 +89,16 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawn("rofi -show run"), desc="rofi"),
     Key([mod], "d", lazy.spawn("rofi -show window"), desc="rofi show running windows"),
+    # Max all
+    Key(
+        [mod, "shift"],
+        "m",
+        maximize_all,
+        desc="Unminimize all windows in current group",
+    ),
+    # Max/Min
+    Key([mod], "m", lazy.window.toggle_maximize(), desc="Toggle maximize"),
+    Key([mod], "n", lazy.window.toggle_minimize(), desc="Toggle minimize"),
     ############
     # Language #
     ############
