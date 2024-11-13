@@ -199,9 +199,8 @@ screens = [
                     },
                     nae_transform=lambda name: name.upper(),
                 ),
-                widget.TextBox(fmt="bg:{}"),  # shows some text before Systray
-                widget.Systray(),
-                widget.Spacer(),  # centers the icon
+                widget.Systray(padding=10),
+                widget.TextBox(fmt="bg{}"),  # shows some text after Systray
                 widget.Clipboard(fmt="Clipped {} "),
                 widget.KeyboardLayout(
                     fmt="🎹 {}",
