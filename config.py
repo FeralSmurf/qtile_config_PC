@@ -22,7 +22,7 @@ def autostart():
         [
             "nitrogen",
             "--set-zoom-fill",
-            "/home/feralsmurf/Downloads/Wallpapers/bridge.jpg",
+            "/home/feralsmurf/Downloads/Wallpapers/forestx.jpg",
         ]
     )
     # Start picom
@@ -41,6 +41,8 @@ mod = "mod4"
 terminal = guess_terminal()
 
 keys = [
+    # Show all active Window
+    Key([mod], "o", lazy.spawn("rofi -show window")),
     # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
@@ -125,9 +127,9 @@ groups = [Group(i) for i in "123456789"]
 
 groups = [
     Group("1", label="1 dev", spawn=["code"]),
-    Group("2", label="2 www", spawn=["firefox"]),
+    Group("2", label="2 www", spawn=["chromium"]),
     Group("3", label="3 term", spawn=["alacritty"]),
-    Group("4", label="4 files", spawn=["thunar"]),
+    Group("4", label="4 files"),
     Group(
         "5",
         label="5 docs",
@@ -197,14 +199,22 @@ screens = [
                     },
                     nae_transform=lambda name: name.upper(),
                 ),
+                widget.TextBox(fmt="bg:{}"),  # shows some text before Systray
                 widget.Systray(),
+                widget.Spacer(),  # centers the icon
                 widget.Clipboard(fmt="Clipped {} "),
+                widget.KeyboardLayout(
+                    fmt="🎹 {}",
+                    configured_keyboards=["us", "ro"],
+                    display_map={"us": "std"},
+                ),
                 widget.GenPollText(func=check_connectivity, update_interval=10),
                 widget.OpenWeather(
                     location="Bucharest",
                     format="~{temp:.0f}°, {pressure}hPa, {wind_speed:.0f}km/h, {humidity}%H, {weather}",
                     fmt="🏙️ {} ",
                     app_key="0ec6327bcee56539cbf468aaffd0bb79",
+                    update_interval=60,
                 ),
                 widget.DF(
                     partition="/home",
@@ -222,13 +232,11 @@ screens = [
                     format="{freq_current}GHz|{load_percent:.0f}%",
                     width=105,
                 ),
-                widget.ThermalSensor(
-                    fmt="🔥 {}", format="{temp:.0f}{unit}", tag_sensor="Package id 0"
-                ),
+                # widget.ThermalSensor(
+                #     fmt="🔥 {}", format="{temp:.0f}{unit}", tag_sensor="Package id 0"
+                # ),
                 widget.Volume(fmt="📢 {} "),
                 widget.Clock(format="%Y.%m.%d %a %I:%M", fmt="⏳️ {} "),
-                # widget.KeyboardLayout(
-                #     fmt='🎹 {}', configured_keyboards=["us", "ro"]),
             ],
             24,
             background="#1e1e2e",
