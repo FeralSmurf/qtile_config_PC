@@ -5,11 +5,13 @@
 # nitrogen
 # picom
 
+# Standard imports
 from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 
+# Custom imports
 from check_internet_widget import check_connectivity
 
 import subprocess
@@ -112,13 +114,13 @@ keys = [
     Key(
         [],
         "XF86AudioLowerVolume",
-        lazy.spawn("amixer sset Master 5%-"),
+        lazy.spawn("amixer -q sset Master 5%-"),
         desc="Lower Volume by 5%",
     ),
     Key(
         [],
         "XF86AudioRaiseVolume",
-        lazy.spawn("amixer sset Master 5%+"),
+        lazy.spawn("amixer -q sset Master 5%+"),
         desc="Raise Volume by 5%",
     ),
 ]
@@ -126,9 +128,9 @@ keys = [
 groups = [Group(i) for i in "123456789"]
 
 groups = [
-    Group("1", label="1 dev", spawn=["code"]),
+    Group("1", label="1 dev"),
     Group("2", label="2 www", spawn=["chromium"]),
-    Group("3", label="3 term", spawn=["alacritty"]),
+    Group("3", label="3 term", spawn=["alacritty -e fish -c 'wttr; exec fish'"]),
     Group("4", label="4 files"),
     Group(
         "5",
@@ -191,7 +193,6 @@ screens = [
                     active="#cdd6f4",
                 ),
                 widget.Prompt(),
-                widget.Spacer(),  # window name is now centered
                 widget.WindowName(),
                 widget.Chord(
                     chords_colors={
@@ -199,9 +200,9 @@ screens = [
                     },
                     nae_transform=lambda name: name.upper(),
                 ),
-                widget.Systray(padding=10),
+                widget.Systray(),
                 widget.TextBox(fmt="bg{}"),  # shows some text after Systray
-                widget.Clipboard(fmt="Clipped {} "),
+                widget.Clipboard(fmt="Yanked!"),
                 widget.KeyboardLayout(
                     fmt="🎹 {}",
                     configured_keyboards=["us", "ro"],
