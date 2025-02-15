@@ -36,7 +36,7 @@ def autostart():
             "fill",
         ]
     )
-    subprocess.Poopen(["Xwayland"])
+    subprocess.Popen(["Xwayland"])
 
 
 mod = "mod4"
